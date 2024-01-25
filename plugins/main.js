@@ -32,9 +32,9 @@ System({
 	type: "user",
 }, async (message) => {
 	const start = new Date().getTime();
-	const ping = await message.send(tiny("*𝆺𝅥 running 𝆺𝅥*"));
+	const ping = await message.send(tiny("*𝘱𝘪𝘯𝘨𝘪𝘯𝘨*"));
 	const end = new Date().getTime();
-	return await ping.edit("*𝘙𝘦𝘴𝘱𝘰𝘯𝘴𝘦:* " + (end - start) + " *ᴍꜱ* ");
+	return await ping.edit("*𝘙𝘦𝘴𝘱𝘰𝘯𝘴𝘦 :* " + (end - start) + " *ᴍꜱ* ");
 });
 
 System({
