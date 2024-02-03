@@ -85,15 +85,6 @@ System({
 });
 
 System({
-	pattern: "vv",
-	fromMe: true,
-	desc: "get view ones message",
-	type: "user",
-}, async (message, match, m) => {
-	await getvv(message, match, m);
-});
-
-System({
 	pattern: "list",
 	fromMe: isPrivate,
 	desc: "Show All commands",
@@ -129,4 +120,13 @@ System({
 	type: "converter",
 }, async (message, match, m) => {
 	await sendUrl(message, match, m)
+});
+
+System({
+    pattern: "vv",
+    fromMe: true,
+    desc: "get view ones message",
+    type: "user",
+}, async (message, match, m) => {
+        await getvv(message, match, m);
 });
