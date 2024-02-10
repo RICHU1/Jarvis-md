@@ -10,17 +10,20 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 const {
+	tiny,
+	isUrl,
+	take,
 	System,
 	isPrivate,
-	tiny,
 	sendMenu,
 	runtime,
-	take,
 	sendSticker,
 	takeExif,
 	sendList,
 	getvv,
-	sendPlugin,
+	findPlugin,
+        sendPlugin,
+        extractUrlFromMessage,
 	Remove,
 	sendUrl
 } = require("../lib/");
@@ -94,15 +97,6 @@ System({
 	await sendList(message, match, { prefix });
 });
 
-System({
-	pattern: "plugin",
-	fromMe: true,
-	desc: "Installs External plugins",
-	type: "user",
-}, async (message, match) => {
-	await sendPlugin(message, match);
-});
-
 
 System({
 	pattern: "remove",
@@ -129,4 +123,23 @@ System({
     type: "user",
 }, async (message, match, m) => {
         await getvv(message, match, m);
+});
+
+
+System({
+    pattern: "plugin",
+    fromMe: true,
+    desc: "Installs External plugins",
+    type: "user",
+}, async (message, match) => {
+    let url = match || (message.reply_message && message.reply_message.text);
+    if (!url) return message.send("_*Reply to a GitHub URL*_");
+
+    const matchUrl = await extractUrlFromMessage(url);
+    if (isUrl(matchUrl)) {
+        await sendPlugin(message, matchUrl);
+    } else {
+        const pluginInfo = await findPlugin(url);
+        await message.send(pluginInfo);
+    }
 });

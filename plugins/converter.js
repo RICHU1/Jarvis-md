@@ -12,8 +12,11 @@ Jarvis - Loki-Xer
 const fs = require('fs');
 const ff = require('fluent-ffmpeg');
 const {
+	Crop,
 	tiny,
+	Round,
 	toPTT,
+	Circle,
 	System,
 	sendPvt,
 	listall,
@@ -193,3 +196,61 @@ System({
         return message.send("An unexpected error occurred.");
     }
 });
+
+
+System({
+    pattern: "round",
+    fromMe: isPrivate,
+    desc: "Changes photo to sticker",
+    type: "converter",
+}, async (message, text, msg, client) => {
+    try {
+        if (!(message.reply_message.sticker || message.reply_message.image)) {
+            return await message.reply("_*Reply to photo or sticker*_");
+        }
+        const buffer = await Round(msg);
+        await client.sendMessage(msg.chat, {sticker: buffer}, {quoted: msg });
+    } catch (error) {
+        console.error("Error in round conversion:", error);
+        await message.reply("_*Error converting sticker*_");
+    }
+});
+
+
+System({
+    pattern: "circle",
+    fromMe: isPrivate,
+    desc: "Changes photo to sticker",
+    type: "converter",
+}, async (message, text, msg, client) => {
+    try {
+        if (!(message.reply_message.sticker || message.reply_message.image)) {
+            return await message.reply("_*Reply to photo or sticker*_");
+        }
+        const buffer = await Circle(msg);
+        await client.sendMessage(msg.chat, {sticker: buffer}, {quoted: msg });
+    } catch (error) {
+        console.error("Error in circle conversion:", error);
+        await message.reply("_*Error converting sticker*_");
+    }
+});
+
+
+System({
+    pattern: "crop",
+    fromMe: isPrivate,
+    desc: "Changes photo to sticker",
+    type: "converter",
+}, async (message, text, msg, client) => {
+    try {
+        if (!(message.reply_message.sticker || message.reply_message.image)) {
+            return await message.reply("_*Reply to photo or sticker*_");
+        }
+        const buffer = await Crop(msg);
+        await client.sendMessage(msg.chat, {sticker: buffer}, {quoted: msg });
+    } catch (error) {
+        console.error("Error in crop conversion:", error);
+        await message.reply("_*Error converting sticker*_");
+    }
+});
+

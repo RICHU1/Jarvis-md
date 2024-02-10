@@ -336,3 +336,49 @@ System({
     return;
   }
 });
+
+
+System({
+    pattern: "mode ",
+    fromMe: true,
+    type: "server",
+    desc: "change work type",
+},
+async (message, match) => {
+    if (!match)
+        return await message.sendPollMessage({ name: "Choose mode to change mode", values: [{ displayText: "private", id: "mode private"}, { displayText: "public", id: "mode public"}], onlyOnce: true, withPrefix: true, participates: [message.sender] });
+   
+if (!match === "private" || !match === "public") 
+    return await message.sendPollMessage({ name: "Choose mode to change mode", values: [{ displayText: "private", id: "mode private"}, { displayText: "public", id: "mode public"}], onlyOnce: true, withPrefix: true, participates: [message.sender] });
+    
+
+    const key = "WORK_TYPE";
+    const value = match;
+    
+    if (!key || !value)
+        return await message.sendPollMessage({ name: "Choose mode to change mode", values: [{ displayText: "private", id: "mode private"}, { displayText: "public", id: "mode public"}], onlyOnce: true, withPrefix: true, participates: [message.sender] });
+    
+    if (server !== "heroku" && server !== "koyeb") {
+        return await message.reply("_*Mod cmd only works in Heroku or Koyeb*_");
+    }
+    
+    if (server === "heroku") {
+        await heroku.patch(baseURI + "/config-vars", {
+            body: {
+                [key.toUpperCase()]: value,
+            },
+        })
+        .then(async () => {
+            await message.send(`_*Work type change to ${value}*_`);
+        })
+        .catch(async (error) => {
+            await message.send(`HEROKU: ${error.body.message}`);
+        });
+    } else if (server === "koyeb") {
+        let check = await get_deployments();
+        if (check === 'true')
+        return await message.reply('_Please wait..._\n_Currently 2 instances are running in Koyeb, wait to stop one of them._');
+        let data = await change_env(`WORK_TYPE: ${match}`);
+        return await message.reply(`_*Work type change to ${value}*_`);
+    }
+});

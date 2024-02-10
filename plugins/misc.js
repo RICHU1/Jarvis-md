@@ -27,6 +27,7 @@ System({
 	desc: "wame generator",
 	type: "misc",
 },async (message, match) => {
+	if (!message.reply_message) return message.reply("_*Reply to a user*_");
 	let sender = 'https://wa.me/' + (message.reply_message.sender || message.mention[0] || message.text).split('@')[0];
 	await message.reply(sender);
 });
@@ -173,6 +174,7 @@ System({
 
 System({
     on: 'text',
+    fromMe: isPrivate,
     dontAddCommandList: true,
 },async (message) => {
     if (message.isBot || !message.reply_message.fromMe || !message.reply_message.text) return;
